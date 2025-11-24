@@ -101,12 +101,19 @@ Statement* Parser::parseLet(TokenStream& tokens,
   auto expr = parseExpression(tokens);
 
   // TODO: create a corresponding stmt and return it.
+  if (!tokens.empty()) {
+    throw BasicError("SYNTAX ERROR");
+  }
+
+  return new LetStmt(varName, expr, originLine);
 }
 
 Statement* Parser::parsePrint(TokenStream& tokens,
                               const std::string& originLine) const {
   auto expr = parseExpression(tokens);
   // TODO: create a corresponding stmt and return it.
+
+  // return new OutputStmt(expr,)
 }
 
 Statement* Parser::parseInput(TokenStream& tokens,
@@ -122,6 +129,11 @@ Statement* Parser::parseInput(TokenStream& tokens,
 
   std::string varName = varToken->text;
   // TODO: create a corresponding stmt and return it.
+  if (!tokens.empty()) {
+    throw BasicError("SYNTAX ERROR");
+  }
+
+  return new InputStmt(varName, originLine);
 }
 
 Statement* Parser::parseGoto(TokenStream& tokens,
