@@ -32,7 +32,7 @@ InputStmt::InputStmt(std::string varName, const std::string& originLine)
     }
 
 void InputStmt::execute(VarState& varState, Program& program) const {
-    std::cout << "?";
+    std::cout << " ? ";
 
     int inputValue;
     std::cin >> inputValue;

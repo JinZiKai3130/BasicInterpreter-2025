@@ -152,7 +152,7 @@ Statement* Parser::parseGoto(TokenStream& tokens,
   if (!tokens.empty()) {
     throw BasicError("SYNTAX ERROR");
   }
-
+  // goto一个不存在的行
   return new GotoStmt(targetLine, originLine);
 }
 
