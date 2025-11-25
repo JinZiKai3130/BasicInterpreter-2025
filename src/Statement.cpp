@@ -14,26 +14,95 @@ Statement::Statement(std::string source) : source_(std::move(source)) {}
 const std::string& Statement::text() const noexcept { return source_; }
 
 // TODO: Imply interfaces declared in the Statement.hpp.
-LetStmt(const std::string& varName, Expression* expr, const std::string& originLine)
-        : Statement(originLine), varName(varName), expr(expr) {
-
-        }
-void LetStmt::execute(VarState& varState) const {
-    int exprValue = expr->evaluate(varState);
-
-    varState.setValue(varName, exprValue);
-}
-
-InputStmt::InputStmt(std::string varName, std::string source)
-    : Statement(std::move(source)), varName_(std::move(varName)) {
-
+LetStmt::LetStmt(std::string varName, Expression* expr, const std::string& originLine)
+    : Statement(originLine), varName_(std::move(varName)), expr_(expr) {
     }
 
+LetStmt::~LetStmt() {
+    delete expr_;
+}
 
-void InputStmt::execute(VarState& state) const {
-  std::cout << "?";
-  int inputValue;
-  std::cin >> inputValue;
+void LetStmt::execute(VarState& varState, Program& program) const {
+    int exprValue = expr_->evaluate(varState);
+    varState.setValue(varName_, exprValue);
+}
 
-  state.setValue(varName_, inputValue);
+InputStmt::InputStmt(std::string varName, const std::string& originLine)
+    : Statement(originLine), varName_(std::move(varName)) {
+    }
+
+void InputStmt::execute(VarState& varState, Program& program) const {
+    std::cout << "?";
+
+    int inputValue;
+    std::cin >> inputValue;
+
+    varState.setValue(varName_, inputValue);
+}
+
+PrintStmt::PrintStmt(Expression* expr, const std::string& originLine)
+    : Statement(originLine), expr(expr) {
+    }
+
+PrintStmt::~PrintStmt() {
+    delete expr;
+}
+
+void PrintStmt::execute(VarState& varState, Program& program) const {
+    int value = expr->evaluate(varState);
+    std::cout << value << std::endl;
+}
+
+GotoStmt::GotoStmt(int targetLine, const std::string& originLine)
+    : Statement(originLine), targetLine(targetLine) {
+    }
+
+void GotoStmt::execute(VarState& varState, Program& program) const {
+    program.changePC(targetLine);
+}
+
+IfStmt::IfStmt(Expression* leftExpr, TokenType op, Expression* rightExpr, 
+               int targetLine, const std::string& originLine)
+    : Statement(originLine),
+      leftExpr_(leftExpr),
+      comparisonOp_(op),
+      rightExpr_(rightExpr),
+      targetLine_(targetLine) {}
+
+IfStmt::~IfStmt() {
+    delete leftExpr_;
+    delete rightExpr_;
+}
+
+void IfStmt::execute(VarState& varState, Program& program) const {
+    int leftValue = leftExpr_->evaluate(varState);
+    int rightValue = rightExpr_->evaluate(varState);
+
+    bool conditionMet = false;
+    if (op == "=") {
+      conditionMet = (leftValue == rightValue);
+    }
+    if (op == "<") {
+      conditionMet = (leftValue < rightValue);
+    }
+    if (op == ">") {
+      conditionMet = (leftValue > rightValue);
+    }
+
+    if (conditionMet) {
+        program.changePC(targetLine_);
+    }
+}
+
+RemStmt::RemStmt(const std::string& originLine) : Statement(originLine) {
+}
+
+void RemStmt::execute(VarState& varState, Program& program) const {
+}
+
+EndStmt::EndStmt(const std::string& originLine) : Statement(originLine) {
+}
+
+void EndStmt::execute(VarState& varState, Program& program) const {
+    program.programEnd();
 }

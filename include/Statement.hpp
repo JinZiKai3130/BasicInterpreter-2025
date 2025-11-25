@@ -25,26 +25,63 @@ class Statement {
 // LetStatement, etc.
 class LetStmt : public Statement {
 private:
-    std::string varName;
-    Expression* expr;
-
+  std::string varName_;
+  Expression* expr_;
 public:
-    LetStmt(const std::string& varName, Expression* expr, const std::string& originLine);
-
-    ~LetStmt() override {
-        delete expr;
-    }
-
-    void execute(VarState& varState) const;
+  LetStmt(std::string varName, Expression* expr, const std::string& originLine);
+  ~LetStmt() override;
+  void execute(VarState& varState, Program& program) const override;
 };
 
 class InputStmt : public Statement {
-  private:
-    std::string varName;
-  public:
-    InputStmt(const std::string& varName, const std::string& originLine)
-        : Statement(originLine), varName(varName) {
-        }
+private:
+  std::string varName_;
+public:
+  InputStmt(std::string varName, const std::string& originLine);
+  void execute(VarState& varState, Program& program) const override;
+};
 
-    void execute(VarState& varState) const;
+class PrintStmt : public Statement {
+private:
+  Expression* expr;
+public:
+  PrintStmt(Expression* expr, const std::string& originLine);
+  ~PrintStmt() override;
+  void execute(VarState& varState, Program& program) const override;
+};
+
+class GotoStmt : public Statement {
+private:
+    int targetLine;
+public:
+    GotoStmt(int targetLine, const std::string& originLine);
+    void execute(VarState& varState, Program& program) const override;
+};
+
+class IfStmt : public Statement {
+private:
+    Expression* leftExpr_;
+    char comparisonOp_;
+    Expression* rightExpr_;
+    int targetLine_;
+
+public:
+    IfStmt(Expression* leftExpr, char op, Expression* rightExpr, 
+           int targetLine, const std::string& originLine);
+    
+    ~IfStmt() override;
+
+    void execute(VarState& varState, Program& program) const override;
+};
+
+class RemStmt : public Statement {
+public:
+    explicit RemStmt(const std::string& originLine);
+    void execute(VarState& varState, Program& program) const override;
+};
+
+class EndStmt : public Statement {
+public:
+    explicit EndStmt(const std::string& originLine);
+    void execute(VarState& varState, Program& program) const override;
 };
