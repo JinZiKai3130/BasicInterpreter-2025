@@ -35,6 +35,7 @@ int main() {
       }
       else {
         program.execute(stmt);
+        delete stmt;
       }
     } catch (const BasicError& e) {
       std::cout << e.message() << "\n";
