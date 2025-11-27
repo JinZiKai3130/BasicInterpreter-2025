@@ -9,6 +9,11 @@ Program::Program()
     : programCounter_(0), programEnd_(false) {
 }
 
+Program::~Program() {
+    clear();
+}
+
+
 void Program::addStmt(int line, Statement* stmt) {
     if (line <= 0) {
         throw BasicError("LINE NUMBER ERROR");
