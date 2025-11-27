@@ -61,7 +61,7 @@ void GotoStmt::execute(VarState& varState, Program& program) const {
     program.changePC(targetLine);
 }
 
-IfStmt::IfStmt(Expression* leftExpr, TokenType op, Expression* rightExpr, 
+IfStmt::IfStmt(Expression* leftExpr, char op, Expression* rightExpr, 
                int targetLine, const std::string& originLine)
     : Statement(originLine),
       leftExpr_(leftExpr),
@@ -79,14 +79,14 @@ void IfStmt::execute(VarState& varState, Program& program) const {
     int rightValue = rightExpr_->evaluate(varState);
 
     bool conditionMet = false;
-    if (op == "=") {
-      conditionMet = (leftValue == rightValue);
+    if (comparisonOp_ == '=') {
+        conditionMet = (leftValue == rightValue);
     }
-    if (op == "<") {
-      conditionMet = (leftValue < rightValue);
+    else if (comparisonOp_ == '<') {
+        conditionMet = (leftValue < rightValue);
     }
-    if (op == ">") {
-      conditionMet = (leftValue > rightValue);
+    else if (comparisonOp_ == '>') {
+        conditionMet = (leftValue > rightValue);
     }
 
     if (conditionMet) {
