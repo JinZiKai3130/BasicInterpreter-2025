@@ -20,20 +20,21 @@ int main() {
     }
     try {
       // TODO: The main function.
-      if (input == "QUIT") break;
-      if (input == "LIST") { program.list(); continue; }
-      if (input == "RUN") { program.run(); continue; }
-      if (input == "CLEAR") { program.clear(); continue; }
-      if (input == "HELP") { std::cout << "my help" << std::endl; continue; }
+      if (line == "QUIT") break;
+      if (line == "LIST") { program.list(); continue; }
+      if (line == "RUN") { program.run(); continue; }
+      if (line == "CLEAR") { program.clear(); continue; }
+      if (line == "HELP") { std::cout << "my help" << std::endl; continue; }
 
-      auto tokens = lexer.tokenize(input);
-      auto parsed_line = parser.parseLine(tokens, input);
-      if (parsed_line.line_number_ != std::nullopt) {
-        program.addStmt(lineNum, stmt);
+      auto tokens = lexer.tokenize(line);
+      auto parsed_line = parser.parseLine(tokens, line);
+      auto stmt = parsed_line.getStatement();
+      if (parsed_line.getLine() != std::nullopt) {
+        int this_line = parsed_line.getLine().value();
+        program.addStmt(this_line, stmt);
       }
       else {
         program.execute(stmt);
-        stmt.~Statement();
       }
     } catch (const BasicError& e) {
       std::cout << e.message() << "\n";

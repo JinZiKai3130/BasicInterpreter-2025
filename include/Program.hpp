@@ -18,7 +18,7 @@ class Program {
   void list() const;
   void clear();
 
-  void execute(Statement* stmt);
+  void execute(const Statement* stmt);
 
   int getPC() const noexcept;
   void changePC(int line);

@@ -1,4 +1,10 @@
 // TODO: Imply interfaces declared in the Program.hpp.
+#include "Program.hpp"
+#include "VarState.hpp"
+#include "utils/Error.hpp"
+#include "Recorder.hpp"
+#include "Statement.hpp"
+#include <iostream>
 Program::Program() 
     : programCounter_(0), programEnd_(false) {
 }
@@ -19,22 +25,24 @@ void Program::removeStmt(int line) {
 
 void Program::run() {
     resetAfterRun();
-    if (recorder_.lines_.empty()) {
-        throw("SYNTAX ERROR");
-        return;
-    }
-    programCounter_ = recorder_.lines.begin()->first;
+    // if (recorder_.lines_.empty()) {
+    //     throw("SYNTAX ERROR");
+    //     return;
+    // }
+    programCounter_ = recorder_.getMinLine();
     while (!programEnd_) {
-        Statement* curStmt = recorder_.get(programCounter_);
+        auto curStmt = recorder_.get(programCounter_);
         try {
-            this->execute(curStmt);
+            execute(curStmt);
+        } catch (const BasicError& e) {
+            std::cout << e.message() << std::endl;
         }
-        int nextLine = recorder_.nextLine(programCounter_);
-        if (nextLine == -1) {
+        int nexLine = recorder_.nextLine(programCounter_);
+        if (nexLine == -1) {
             programEnd_ = true;
         }
         else {
-            programCounter_ = nextLine;
+            programCounter_ = nexLine;
         }
     }
 }
@@ -49,7 +57,7 @@ void Program::clear() {
 
 }
 
-void Program::execute(Statement* stmt) {
+void Program::execute(const Statement* stmt) {
     // !stmt possible?
     try {
         stmt->execute(vars_, *this);
@@ -63,7 +71,7 @@ int Program::getPC() const noexcept {
 }
 
 void Program::changePC(int line) {
-    if (!recorder_.hasline(line)) {
+    if (!recorder_.hasLine(line)) {
         throw BasicError("LINE NUMBER ERROR");
     }
     programCounter_ = line;
