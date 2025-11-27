@@ -3,7 +3,12 @@ void Recorder::add(int line, Statement* stmt) {
     lines_[line] = stmt;
 }
 void Recorder::remove(int line) {
-    lines_.erase(line);
+    auto it = lines_.find(line);
+    if (it != lines_.end()) {
+        it->second.~Statement();
+        lines_.erase(it);
+    }
+    lines_.emplace(line, stmt);
 }
 const Statement* Recorder::get(int line) const noexcept {
     return lines_[line];
