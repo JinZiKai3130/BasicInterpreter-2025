@@ -43,7 +43,6 @@ void Recorder::clear() noexcept {
     lines_.clear();
 }
 void Recorder::printLines() const {
-    std::cout << lines_.size() << std::endl;
     for (auto it = lines_.begin(); it != lines_.end(); ++it) {
         std::cout << it->second->text() << std::endl;
     }
@@ -57,7 +56,7 @@ int Recorder::nextLine(int line) const noexcept {
 
 int Recorder::getMinLine() const noexcept {
     if (lines_.empty()) {
-        return -1; // 配合Program中的size()检查，实际不会走到这里
+        return -1;
     }
-    return lines_.begin()->first; // lines_为std::map，按行号升序排列
+    return lines_.begin()->first;
 }

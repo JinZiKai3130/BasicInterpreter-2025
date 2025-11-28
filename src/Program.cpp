@@ -37,17 +37,19 @@ void Program::run() {
     programCounter_ = recorder_.getMinLine();
     while (!programEnd_) {
         auto curStmt = recorder_.get(programCounter_);
+        int curLine = programCounter_;
         try {
             execute(curStmt);
         } catch (const BasicError& e) {
             std::cout << e.message() << std::endl;
         }
-        int nexLine = recorder_.nextLine(programCounter_);
-        if (nexLine == -1) {
-            programEnd_ = true;
-        }
-        else {
-            programCounter_ = nexLine;
+        if (programCounter_ == curLine) {
+            int nextLine = recorder_.nextLine(programCounter_);
+            if (nextLine == -1) {
+                programEnd_ = true;
+            } else {
+                programCounter_ = nextLine;
+            }
         }
     }
 }
@@ -88,5 +90,4 @@ void Program::programEnd() {
 void Program::resetAfterRun() noexcept {
     programCounter_ = 0;
     programEnd_ = false;
-    vars_.clear();
 }
