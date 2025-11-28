@@ -23,7 +23,7 @@ void Program::addStmt(int line, Statement* stmt) {
 
 void Program::removeStmt(int line) {
     if (!recorder_.hasLine(line)) {
-        throw BasicError("LINE NUMBER ERROR");
+        return;
     }
     recorder_.remove(line);
 }
@@ -59,7 +59,6 @@ void Program::list() const {
 void Program::clear() {
     recorder_.clear();
     vars_.clear();
-
 }
 
 void Program::execute(const Statement* stmt) {

@@ -29,16 +29,19 @@ int main() {
       auto tokens = lexer.tokenize(line);
       auto parsed_line = parser.parseLine(tokens, line);
       auto stmt = parsed_line.fetchStatement();
-      if (parsed_line.getLine() != std::nullopt) {
+      if (parsed_line.getLine() != std::nullopt && stmt != nullptr) {
         int this_line = parsed_line.getLine().value();
+        // std::cout << "add" << std::endl;
         program.addStmt(this_line, stmt);
       }
       else if (stmt == nullptr) {
         int this_line = parsed_line.getLine().value();
+        // std::cout << "stmt == nullptr" << std::endl;
         program.removeStmt(this_line);
       } 
       else {
         program.execute(stmt);
+        // std::cout << "execute" << std::endl;
         delete stmt;
       }
     } catch (const BasicError& e) {

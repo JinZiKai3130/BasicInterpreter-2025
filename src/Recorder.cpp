@@ -17,9 +17,11 @@ void Recorder::add(int line, Statement* stmt) {
 void Recorder::remove(int line) {
     auto it = lines_.find(line);
     if (it != lines_.end()) {
+        // std::cout << lines_.size() << std::endl;
         delete it->second;
         lines_.erase(it);
     }
+    // std::cout << lines_.size() << std::endl;
 }
 const Statement* Recorder::get(int line) const noexcept {
     auto it = lines_.find(line);
@@ -41,6 +43,7 @@ void Recorder::clear() noexcept {
     lines_.clear();
 }
 void Recorder::printLines() const {
+    std::cout << lines_.size() << std::endl;
     for (auto it = lines_.begin(); it != lines_.end(); ++it) {
         std::cout << it->second->text() << std::endl;
     }

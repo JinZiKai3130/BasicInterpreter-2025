@@ -32,12 +32,27 @@ InputStmt::InputStmt(std::string varName, const std::string& originLine)
     }
 
 void InputStmt::execute(VarState& varState, Program& program) const {
-    std::cout << " ? ";
-
-    int inputValue;
-    std::cin >> inputValue;
-
-    varState.setValue(varName_, inputValue);
+    while (1) {
+        std::cout << " ? ";
+        int inputint;
+        std::string inputValue;
+        getline(std::cin, inputValue);
+        try {
+            size_t pos = 0;
+            inputint = std::stoi(inputValue, &pos);
+        
+            if (pos == inputValue.length()) {
+                varState.setValue(varName_, inputint);
+                return;
+            }
+            else {
+                std::cout << "INVALID NUMBER" << std::endl;
+            }
+        } catch (const std::invalid_argument& e) {
+            std::cout << "INVALID NUMBER" << std::endl;
+        }
+    }
+    
 }
 
 PrintStmt::PrintStmt(Expression* expr, const std::string& originLine)
