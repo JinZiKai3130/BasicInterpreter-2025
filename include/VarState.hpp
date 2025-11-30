@@ -15,6 +15,5 @@ class VarState {
   void clear();
 
  private:
-  int level;
   std::vector<std::unordered_map<std::string, int>> scopes;
 };

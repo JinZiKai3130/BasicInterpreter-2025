@@ -20,7 +20,7 @@ int main() {
     }
     try {
       // TODO: The main function.
-      if (line == "QUIT") { break; }
+      if (line == "QUIT") { program.clear(); break; }
       if (line == "LIST") { program.list(); continue; }
       if (line == "RUN") { program.run(); continue; }
       if (line == "CLEAR") { program.clear(); continue; }
@@ -45,8 +45,10 @@ int main() {
         delete stmt;
       }
     } catch (const BasicError& e) {
+      program.clear();
       std::cout << e.message() << "\n";
     }
   }
+  program.clear();
   return 0;
 }

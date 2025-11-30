@@ -41,7 +41,8 @@ void Program::run() {
         try {
             execute(curStmt);
         } catch (const BasicError& e) {
-            std::cout << e.message() << std::endl;
+            clear();
+            throw;
         }
         if (programCounter_ == curLine) {
             int nextLine = recorder_.nextLine(programCounter_);
@@ -68,7 +69,8 @@ void Program::execute(const Statement* stmt) {
     try {
         stmt->execute(vars_, *this);
     } catch (const BasicError& e) {
-        std::cout << e.message() << std::endl;
+        clear();
+        throw;
     }
 }
 

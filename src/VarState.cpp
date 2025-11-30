@@ -5,21 +5,18 @@
 #include "utils/Error.hpp"
 
 VarState::VarState() {
-  level = 0;
-  scopes.resize(1);
+  scopes.emplace_back();
 }
 
 void VarState::Indent() {
-  ++level;
-  scopes.resize(level + 1);
+  scopes.emplace_back();
 }
 
 void VarState::Dedent() {
-  if (level == 0) {
+  if (scopes.size() <= 1) {
     throw BasicError("SCOPE UNDERFLOW");
   }
-  --level;
-  scopes.resize(level + 1);
+  scopes.pop_back();
 }
 
 void VarState::setValue(const std::string& name, int value) { // change
@@ -27,7 +24,7 @@ void VarState::setValue(const std::string& name, int value) { // change
 }
 
 int VarState::getValue(const std::string& name) const { // change 
-  for (auto it = scopes.end(); it != scopes.begin(); --it) {
+  for (auto it = scopes.rbegin(); it != scopes.rend(); ++it) {
     auto var = it->find(name);
     if (var != it->end()) {
       return var->second;
@@ -38,6 +35,5 @@ int VarState::getValue(const std::string& name) const { // change
 
 void VarState::clear() {
   scopes.clear();
-  level = 0;
-  scopes.resize(1);
+  scopes.emplace_back();
 }
