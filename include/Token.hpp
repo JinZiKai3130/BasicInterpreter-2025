@@ -34,6 +34,8 @@ enum class TokenType {
   RIGHT_PAREN,
   COMMA,
   // Reserved placeholder
+  INDENT,
+  DEDENT,
   UNKNOWN
 };
 

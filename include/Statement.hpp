@@ -52,36 +52,48 @@ public:
 
 class GotoStmt : public Statement {
 private:
-    int targetLine;
+  int targetLine;
 public:
-    GotoStmt(int targetLine, const std::string& originLine);
-    void execute(VarState& varState, Program& program) const override;
+  GotoStmt(int targetLine, const std::string& originLine);
+  void execute(VarState& varState, Program& program) const override;
 };
 
 class IfStmt : public Statement {
 private:
-    Expression* leftExpr_;
-    char comparisonOp_;
-    Expression* rightExpr_;
-    int targetLine_;
+  Expression* leftExpr_;
+  char comparisonOp_;
+  Expression* rightExpr_;
+  int targetLine_;
 
 public:
-    IfStmt(Expression* leftExpr, char op, Expression* rightExpr, 
-           int targetLine, const std::string& originLine);
+  IfStmt(Expression* leftExpr, char op, Expression* rightExpr, 
+  int targetLine, const std::string& originLine);
     
-    ~IfStmt() override;
+  ~IfStmt() override;
 
-    void execute(VarState& varState, Program& program) const override;
+  void execute(VarState& varState, Program& program) const override;
 };
 
 class RemStmt : public Statement {
 public:
-    explicit RemStmt(const std::string& originLine);
-    void execute(VarState& varState, Program& program) const override;
+  explicit RemStmt(const std::string& originLine);
+  void execute(VarState& varState, Program& program) const override;
 };
 
 class EndStmt : public Statement {
 public:
-    explicit EndStmt(const std::string& originLine);
-    void execute(VarState& varState, Program& program) const override;
+  explicit EndStmt(const std::string& originLine);
+  void execute(VarState& varState, Program& program) const override;
+};
+
+class IndentStmt : public Statement {
+public:
+  IndentStmt(const std::string& line);
+  void execute(VarState& vars, Program& program) const override;
+};
+
+class DedentStmt : public Statement {
+public:
+  DedentStmt(const std::string& line);
+  void execute(VarState& vars, Program& program) const override;
 };

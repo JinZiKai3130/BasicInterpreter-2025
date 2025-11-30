@@ -121,3 +121,17 @@ EndStmt::EndStmt(const std::string& originLine) : Statement(originLine) {
 void EndStmt::execute(VarState& varState, Program& program) const {
     program.programEnd();
 }
+
+IndentStmt::IndentStmt(const std::string& originLine) : Statement(originLine) {
+}
+
+void IndentStmt::execute(VarState& vars, Program& program) const {
+    vars.Indent();
+}
+
+DedentStmt::DedentStmt(const std::string& originLine) : Statement(originLine) {
+}
+
+void DedentStmt::execute(VarState& vars, Program& program) const {
+    vars.Dedent();
+}
